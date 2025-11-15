@@ -252,4 +252,3 @@ FROM
     course_instance ci
 JOIN
     course_layout cl ON ci.course_layout_id = cl.course_layout_id;
-
