@@ -60,7 +60,7 @@ INSERT INTO phone_number (phone_nb, person_id) VALUES
 ('0707636931', 11), ('0703829417', 12), ('0701126724', 13), ('0702820493', 14), ('0706367444', 15),
 ('0701717955', 16), ('0705209512', 17), ('0705441941', 18), ('0707411053', 19), ('0708679152', 20);
 
-TRUNCATE TABLE job_titles RESTART IDENTITY CASCADE;
+TRUNCATE TABLE job_title RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- JOB_TITLE
 -- -------------------------------
