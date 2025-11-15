@@ -169,7 +169,7 @@ ALTER TABLE department
 CREATE OR REPLACE FUNCTION check_teacher_max_course_instances()
 RETURNS TRIGGER AS $$
 DECLARE
-    v_study_period  INT;
+    v_study_period  STUDY_PERIOD;
     v_study_year    INT;
     v_instance_id   INT;
     v_course_count  INT;
