@@ -7,7 +7,16 @@
 --CREATE DATABASE university;
 --\c university;
 ---------------------------------------------------------------------------------------------------------------------
--- Drop all tables (CASCADE handles order and constraints)
+-- Drop View
+DROP VIEW IF EXISTS v_full_course_workload;
+
+-- Drop Trigger
+DROP TRIGGER IF EXISTS employee_max_course_instances_per_period_and_year ON employee_activity;
+
+-- Drop Function
+DROP FUNCTION IF EXISTS check_teacher_max_course_instances();
+
+-- Drop all tables 
 DROP TABLE IF EXISTS person_address CASCADE;
 DROP TABLE IF EXISTS phone_number CASCADE;
 DROP TABLE IF EXISTS salary_history CASCADE;
@@ -23,7 +32,7 @@ DROP TABLE IF EXISTS course_layout CASCADE;
 DROP TABLE IF EXISTS person CASCADE;
 DROP TABLE IF EXISTS address CASCADE;
 
--- Drop types (now that no tables use them)
+-- Drop types 
 DROP TYPE IF EXISTS STUDY_PERIOD;
 DROP TYPE IF EXISTS COUNTRY_NAME;
 ---------------------------------------------------------------------------------------------------------------------
@@ -205,7 +214,7 @@ EXECUTE FUNCTION check_teacher_max_course_instances();
 -- view for derived data 
 ---------------------------------------------------------------------------------------------------------------------
 
-CREATE VIEW v_full_course_workload AS
+CREATE OR REPLACE VIEW  v_full_course_workload AS
 
 -- select all the manually entered hours
 SELECT
@@ -227,7 +236,7 @@ SELECT
     NULL AS planned_activity_id, 
     ci.instance_id,
     'Examination' AS activity_name,
-    (32 + 0.725 * ci.num_students) AS planned_nb_hours -- The formula
+    (32 + 0.725 * ci.num_students) AS planned_nb_hours 
 FROM
     course_instance ci
 
