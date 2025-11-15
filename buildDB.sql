@@ -56,21 +56,28 @@ CREATE TABLE phone_number (
 );
 ---------------------------------------------------------------------------------------------------------------------
 --EMPLOYEE PART OF THE MODEL
+CREATE TABLE job_title (
+	job_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	job_title VARCHAR(300)
+);
+
 CREATE TABLE employee (
 	employment_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 	manager_id INT, --can be NULL if you have no manager
 	person_id INT NOT NULL,
 	job_id INT NOT NULL,
 	department_id INT NOT NULL,
-	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	--FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
 	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE 	RESTRICT ON UPDATE RESTRICT,
-	FOREIGN KEY (job_id) REFERENCES job_title(job_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-	FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+	FOREIGN KEY (job_id) REFERENCES job_title(job_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+	--FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
-CREATE TABLE job_title (
-	job_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-	job_title VARCHAR(300)
+CREATE TABLE department(
+	department_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+	department_name VARCHAR(300) UNIQUE NOT NULL,
+	manager_id INT NOT NULL,
+	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE salary_history(
@@ -81,13 +88,6 @@ CREATE TABLE salary_history(
 	employment_id INT NOT NULL,
 	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
 
-);
-
-CREATE TABLE department(
-	department_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-	department_name VARCHAR(300) UNIQUE NOT NULL,
-	manager_id INT NOT NULL,
-	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE skill(
@@ -102,5 +102,14 @@ CREATE TABLE employee_activity (
 	planned_activity_id INT NOT NULL,
 	PRIMARY KEY(employment_id, planned_activity_id),
 	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-	FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+	--FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
+
+--add foreign keys and avoid cyclic dependencies in postgres:
+ALTER TABLE employee
+	ADD CONSTRAINT fk_employee_manager
+	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE employee
+	ADD CONSTRAINT fk_employee_department
+	FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
