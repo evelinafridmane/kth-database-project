@@ -203,3 +203,45 @@ BEFORE INSERT ON employee_activity
 FOR EACH ROW
 EXECUTE FUNCTION check_teacher_max_course_instances();
 
+-- view for derived data 
+---------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW v_full_course_workload AS
+
+-- select all the manually entered hours
+SELECT
+    pa.planned_activity_id,
+    pa.instance_id,
+    ta.activity_name,
+    pa.planned_nb_hours
+FROM
+    planned_activity pa
+JOIN
+    teaching_activity ta ON pa.teaching_activity_id = ta.teaching_activity_id
+WHERE
+    ta.activity_name NOT IN ('Examination', 'Administration')
+
+UNION ALL
+
+-- calculate and add the 'Examination' hours
+SELECT
+    NULL AS planned_activity_id, 
+    ci.instance_id,
+    'Examination' AS activity_name,
+    (32 + 0.725 * ci.num_students) AS planned_nb_hours -- The formula
+FROM
+    course_instance ci
+
+UNION ALL
+
+-- calculate and add the 'Administration' hours
+SELECT
+    NULL AS planned_activity_id,
+    ci.instance_id,
+    'Administration' AS activity_name,
+    (2 * cl.hp + 28 + 0.2 * ci.num_students) AS planned_nb_hours -- The formula
+FROM
+    course_instance ci
+JOIN
+    course_layout cl ON ci.course_layout_id = cl.course_layout_id;
+
