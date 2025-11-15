@@ -160,9 +160,6 @@ ALTER TABLE employee
 ALTER TABLE employee_activity
 	ADD CONSTRAINT fk_planned_activity_id
 	FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
-ALTER TABLE department
-	ADD CONSTRAINT fk_department_employee
-	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ---------------------------------------------------------------------------------------------------------------------
 -- add triggers
