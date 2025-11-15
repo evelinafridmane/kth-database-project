@@ -93,8 +93,7 @@ CREATE TABLE salary_history(
 	from_date TIMESTAMPTZ NOT NULL,
 	to_date TIMESTAMPTZ, --can be Null
 	employment_id INT NOT NULL,
-	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
-
+	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
 CREATE TABLE skill(
@@ -108,7 +107,7 @@ CREATE TABLE employee_activity (
 	employment_id INT NOT NULL,
 	planned_activity_id INT NOT NULL,
 	PRIMARY KEY(employment_id, planned_activity_id),
-	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 	--FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
 
@@ -159,7 +158,7 @@ ALTER TABLE employee
 	FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE employee_activity
 	ADD CONSTRAINT fk_planned_activity_id
-	FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+	FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ---------------------------------------------------------------------------------------------------------------------
 -- add triggers
