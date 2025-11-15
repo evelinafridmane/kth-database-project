@@ -206,7 +206,7 @@ EXECUTE FUNCTION check_teacher_max_course_instances();
 -- view for derived data 
 ---------------------------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE VIEW v_full_course_workload AS
+CREATE VIEW v_full_course_workload AS
 
 -- select all the manually entered hours
 SELECT
