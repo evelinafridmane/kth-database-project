@@ -163,6 +163,41 @@ ALTER TABLE employee_activity
 ALTER TABLE department
 	ADD CONSTRAINT fk_department_employee
 	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+---------------------------------------------------------------------------------------------------------------------
+-- add triggers
+CREATE OR REPLACE FUNCTION check_teacher_max_courses()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_study_period  INT;
+    v_study_year    INT;
+    v_course_count  INT;
+BEGIN
+    SELECT ci.study_period, ci.study_year INTO v_study_period, v_study_year
+    FROM planned_activity pa
+    JOIN course_instance ci ON pa.instance_id = ci.instance_id
+    WHERE pa.planned_activity_id = NEW.planned_activity_id;
+
+    SELECT COUNT(*) INTO v_course_count
+    FROM employee_activity ea
+    JOIN planned_activity pa2 ON ea.planned_activity_id = pa2.planned_activity_id
+    JOIN course_instance ci2 ON pa2.instance_id = ci2.instance_id
+    WHERE ea.employment_id = NEW.employment_id
+      AND ci2.study_period = v_study_period
+      AND ci2.study_year = v_study_year;
+
+    IF v_course_count >= 4 THEN
+        RAISE EXCEPTION 'Teacher % already has 4 courses in study period % year %', NEW.employment_id, v_study_period, v_study_year;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER employee_max_courses_per_period_and_year
+BEFORE INSERT ON employee_activity
+FOR EACH ROW
+EXECUTE FUNCTION check_teacher_max_courses();
 	
 
 
