@@ -216,12 +216,14 @@ EXECUTE FUNCTION check_teacher_max_course_instances();
 
 CREATE OR REPLACE VIEW  v_full_course_workload AS
 
--- select all the manually entered hours
+-- all the manually entered hours
 SELECT
     pa.planned_activity_id,
     pa.instance_id,
     ta.activity_name,
-    pa.planned_nb_hours
+    ta.factor,
+    pa.planned_nb_hours,
+   (pa.planned_nb_hours * ta.factor) AS total_teachers_hours
 FROM
     planned_activity pa
 JOIN
@@ -231,23 +233,27 @@ WHERE
 
 UNION ALL
 
--- calculate and add the 'Examination' hours
+-- calculate the Examination hours
 SELECT
     NULL AS planned_activity_id, 
     ci.instance_id,
     'Examination' AS activity_name,
-    (32 + 0.725 * ci.num_students) AS planned_nb_hours 
+     NULL AS factor,
+     NULL AS planned_nb_hours
+    (32 + 0.725 * ci.num_students) AS  total_teachers_hours 
 FROM
     course_instance ci
 
 UNION ALL
 
--- calculate and add the 'Administration' hours
+-- calculatethe Administration hours
 SELECT
     NULL AS planned_activity_id,
     ci.instance_id,
     'Administration' AS activity_name,
-    (2 * cl.hp + 28 + 0.2 * ci.num_students) AS planned_nb_hours -- The formula
+     NULL AS factor,
+     NULL AS planned_nb_hours
+    (2 * cl.hp + 28 + 0.2 * ci.num_students) AS total_teachers_hours 
 FROM
     course_instance ci
 JOIN
