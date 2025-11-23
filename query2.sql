@@ -4,7 +4,8 @@
 
 
 
--- counting the number of techers to then allocate equal amount of hours of the course to each teacher
+-- counting the number of techers doing specific course to then allocate equal
+-- amount of admin and exam hours of the course to each teacher
 WITH teacher_counts AS (
     SELECT pa.instance_id, 
         COUNT(DISTINCT ea.employment_id) AS total_teachers
