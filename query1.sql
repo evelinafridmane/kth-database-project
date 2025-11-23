@@ -28,3 +28,11 @@ GROUP BY
 	ci.study_period,
 	ci.num_students
 
+/*
+"Course code"	"Course instance ID"	"HP"	"Study period"	"Number of students"	"Lectures"	"Tutorial Hours"	"Seminar Hours"	"Other Overhead Hours"	"Administration Hours"	"Examination Hours"	"Total Hours"
+102	9	9	"P1"	20	64.79999828338623	0	0	0	50	46.5	161.29999828338623
+103	1	10	"P1"	25	0	0	0	0	53	50.125	127.12500095367432
+105	13	8	"P1"	25	0	0	39.59999895095825	0	49	50.125	138.72499895095825
+107	5	10	"P1"	25	0	0	0	0	53	50.125	136.72500133514404
+117	17	8	"P1"	15	0	46.79999876022339	0	0	47	42.875	136.6749987602234
+*/
