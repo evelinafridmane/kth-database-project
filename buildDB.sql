@@ -239,7 +239,7 @@ SELECT
     ci.instance_id,
     'Examination' AS activity_name,
      NULL AS factor,
-     NULL AS planned_nb_hours
+     NULL AS planned_nb_hours,
     (32 + 0.725 * ci.num_students) AS  total_teachers_hours 
 FROM
     course_instance ci
@@ -252,7 +252,7 @@ SELECT
     ci.instance_id,
     'Administration' AS activity_name,
      NULL AS factor,
-     NULL AS planned_nb_hours
+     NULL AS planned_nb_hours,
     (2 * cl.hp + 28 + 0.2 * ci.num_students) AS total_teachers_hours 
 FROM
     course_instance ci
