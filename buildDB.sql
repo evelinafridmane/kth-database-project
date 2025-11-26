@@ -125,7 +125,7 @@ CREATE TABLE employee_activity (
 
 CREATE TABLE course_layout (
   course_layout_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  course_code INT NOT NULL UNIQUE,
+  course_code INT NOT NULL,
   layout_version INT NOT NULL,
   course_name VARCHAR(300) NOT NULL,
   min_students INT NOT NULL,
