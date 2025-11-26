@@ -49,3 +49,9 @@ WHERE
   
 GROUP BY
   cl.course_code, ci.instance_id, cl.hp, p.first_name, p.last_name, jt.job_title, tc.total_teachers;
+
+Course code	Course instance ID	HP	Teacher's Name	Designation	Lecture Hours		Tutorial Hours		Lab Hours		Seminar Hours		Other Overhead Hours	Admin			Exam			Total Hours
+103		1			10	Anna Andersson	Lab Assistant	0.0			0.0			24.000000953674316	0.0			0.0			13.2500000000000000	12.5312500000000000	49.781250953674316
+103		1			10	Filip Eriksson	Administrator	0.0			0.0			0.0			37.79999899864197	0.0			13.2500000000000000	12.5312500000000000	63.58124899864197
+103		1			10	Jonas Johansson	Lab Assistant	53.999998569488525	0.0			0.0			0.0			0.0			13.2500000000000000	12.5312500000000000	79.78124856948853
+103		1			10	Sven Lund	Technical Staff	0.0			48.59999871253967	0.0			0.0			0.0			13.2500000000000000	12.5312500000000000	74.38124871253967
