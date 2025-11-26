@@ -35,4 +35,11 @@ GROUP BY
 HAVING 
     COUNT(DISTINCT ci.instance_id) > 0;
 
-
+Employment ID	Teacher's Name		Period		"No of courses"
+1		Anna Andersson		P2		1
+5		Lisa Karlsson		P2		1
+6		Jonas Johansson		P2		1
+9		Eva Larsson		P2		1
+12		Filip Eriksson		P2		1
+17		Isabel Magnusson	P2		1
+18		Sven Lund		P2		1
