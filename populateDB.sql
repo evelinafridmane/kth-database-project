@@ -68,6 +68,16 @@ INSERT INTO job_title (job_title) VALUES
 ('Professor'), ('Lecturer'), ('Researcher'), ('Administrator'), ('Lab Assistant'),
 ('Course Coordinator'), ('Adjunct'), ('Technical Staff'), ('Postdoc'), ('Dean');
 
+-- -------------------------------
+-- DEPARTMENT (since dependant on employee populate like that first, need to remove NOT NULL constrain form mahnager_id)
+-- -------------------------------
+TRUNCATE TABLE department RESTART IDENTITY CASCADE;
+
+INSERT INTO department (department_name, manager_id) VALUES
+('Computer Science', NULL), ('Mathematics', NULL), ('Physics', NULL), ('Electrical Engineering', NULL), ('Mechanical Engineering', NULL),
+('Civil Engineering', NULL), ('Architecture', NULL), ('Chemistry', NULL), ('Biotechnology', NULL), ('Industrial Management', NULL);
+
+
 TRUNCATE TABLE employee RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- EMPLOYEE
