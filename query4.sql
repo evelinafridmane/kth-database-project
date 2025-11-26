@@ -18,7 +18,8 @@ JOIN course_instance AS ci ON pa.instance_id = ci.instance_id
 
 WHERE
    ci.study_year = EXTRACT(YEAR FROM CURRENT_DATE)
-  
+	
+  -- we decided to take period time exactly how it is in KTH from KTH website 
   AND ci.study_period = (
       CASE 
           WHEN TO_CHAR(CURRENT_DATE, 'MMDD') BETWEEN '0825' AND '1024' THEN 'P1'
