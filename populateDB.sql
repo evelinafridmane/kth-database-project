@@ -72,7 +72,7 @@ INSERT INTO job_title (job_title) VALUES
 -- DEPARTMENT (since dependant on employee populate like that first, need to remove NOT NULL constrain form mahnager_id)
 -- -------------------------------
 TRUNCATE TABLE department RESTART IDENTITY CASCADE;
-
+ALTER TABLE department ALTER COLUMN manager_id DROP NOT NULL; -- temporarily drop this constraint to start populating
 INSERT INTO department (department_name, manager_id) VALUES
 ('Computer Science', NULL), ('Mathematics', NULL), ('Physics', NULL), ('Electrical Engineering', NULL), ('Mechanical Engineering', NULL),
 ('Civil Engineering', NULL), ('Architecture', NULL), ('Chemistry', NULL), ('Biotechnology', NULL), ('Industrial Management', NULL);
@@ -95,6 +95,8 @@ TRUNCATE TABLE department RESTART IDENTITY CASCADE;
 INSERT INTO department (department_name, manager_id) VALUES
 ('Computer Science', 1), ('Mathematics', 2), ('Physics', 3), ('Electrical Engineering', 4), ('Mechanical Engineering', 5),
 ('Civil Engineering', 6), ('Architecture', 7), ('Chemistry', 8), ('Biotechnology', 9), ('Industrial Management', 10);
+ALTER TABLE department ALTER COLUMN manager_id SET NOT NULL; -- put the not null constraint again
+
 
 TRUNCATE TABLE skill RESTART IDENTITY CASCADE;
 -- -------------------------------
@@ -217,7 +219,5 @@ INSERT INTO salary_history (monthly_salary_amount, from_date, to_date, employmen
 ('46000', '2022-01-01', NULL, 18),
 ('54000', '2022-01-01', NULL, 19),
 ('72000', '2022-01-01', NULL, 20); 
-
-
 
 
