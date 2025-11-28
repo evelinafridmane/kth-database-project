@@ -1,224 +1,260 @@
-TRUNCATE TABLE address RESTART IDENTITY CASCADE;
--- -------------------------------
--- ADDRESS - all Sweden for country
--- -------------------------------
-INSERT INTO address (street_name, zip, city, country) VALUES
-('Lindstedtsvägen', '10010', 'Stockholm', 'Sweden'),
-('Drottninggatan', '10123', 'Stockholm', 'Sweden'),
-('Sveavägen', '11122', 'Stockholm', 'Sweden'),
-('Kungsgatan', '11345', 'Stockholm', 'Sweden'),
-('Vasagatan', '11055', 'Stockholm', 'Sweden'),
-('Odengatan', '10456', 'Stockholm', 'Sweden'),
-('Sturegatan', '11010', 'Stockholm', 'Sweden'),
-('Birger Jarlsgatan', '10888', 'Stockholm', 'Sweden'),
-('Valhallavägen', '10220', 'Stockholm', 'Sweden'),
-('Roslagsvägen', '10987', 'Stockholm', 'Sweden'),
-('Teknologgatan', '10500', 'Stockholm', 'Sweden'),
-('Norra Stationsgatan', '10011', 'Stockholm', 'Sweden'),
-('Odenplan', '10333', 'Stockholm', 'Sweden'),
-('Norrtullsgatan', '10022', 'Stockholm', 'Sweden'),
-('Götgatan', '11111', 'Stockholm', 'Sweden'),
-('Stora Nygatan', '11234', 'Stockholm', 'Sweden'),
-('Södra Stationsgatan', '11300', 'Stockholm', 'Sweden'),
-('Fleminggatan', '11411', 'Stockholm', 'Sweden'),
-('Hantverkargatan', '11512', 'Stockholm', 'Sweden'),
-('Tegnergatan', '11613', 'Stockholm', 'Sweden');
+---------------------------------------------------------------------------------------------------------------------
+--run this code if you're on terminal
+-- switch to postgres database
+--\c postgres;
+-- drop and create database
+--DROP DATABASE IF EXISTS university;
+--CREATE DATABASE university;
+--\c university;
+---------------------------------------------------------------------------------------------------------------------
+-- Drop View
+DROP VIEW IF EXISTS v_full_course_workload;
 
-TRUNCATE TABLE person RESTART IDENTITY CASCADE;
--- -------------------------------
--- PERSON
--- -------------------------------
-INSERT INTO person (personal_number, first_name, last_name) VALUES
-('198005022053', 'Anna', 'Andersson'),
-('198110259342', 'Erik', 'Berg'),
-('198206055793', 'Karin', 'Ekström'),
-('198304249785', 'Oskar', 'Nilsson'),
-('198407092929', 'Lisa', 'Karlsson'),
-('198506235174', 'Jonas', 'Johansson'),
-('198609067993', 'Sara', 'Persson'),
-('198705246050', 'Karl', 'Svensson'),
-('198805226011', 'Eva', 'Larsson'),
-('198911061897', 'Johan', 'Lindberg'),
-('199008215442', 'Maria', 'Lindgren'),
-('199102139474', 'Filip', 'Eriksson'),
-('199212183383', 'Julia', 'Sandberg'),
-('199312217917', 'Fredrik', 'Danielsson'),
-('199405263548', 'Emma', 'Holm'),
-('199505192402', 'Niklas', 'Olsson'),
-('199604244765', 'Isabel', 'Magnusson'),
-('199704192619', 'Sven', 'Lund'),
-('199808034740', 'Nina', 'Nordin'),
-('199911191526', 'Axel', 'Westin');
+-- Drop Trigger
+DROP TRIGGER IF EXISTS employee_max_course_instances_per_period_and_year ON employee_activity;
 
-TRUNCATE TABLE phone_number RESTART IDENTITY CASCADE;
--- -------------------------------
--- PHONE_NUMBER
--- -------------------------------
-INSERT INTO phone_number (phone_nb, person_id) VALUES
-('0704972835', 1), ('0701170952', 2), ('0708577626', 3), ('0707001915', 4), ('0701876138', 5),
-('0701744056', 6), ('0701800121', 7), ('0704169736', 8), ('0705517867', 9), ('0703339570', 10),
-('0707636931', 11), ('0703829417', 12), ('0701126724', 13), ('0702820493', 14), ('0706367444', 15),
-('0701717955', 16), ('0705209512', 17), ('0705441941', 18), ('0707411053', 19), ('0708679152', 20);
+-- Drop Function
+DROP FUNCTION IF EXISTS check_teacher_max_course_instances();
 
-TRUNCATE TABLE job_title RESTART IDENTITY CASCADE;
--- -------------------------------
--- JOB_TITLE
--- -------------------------------
-INSERT INTO job_title (job_title) VALUES
-('Professor'), ('Lecturer'), ('Researcher'), ('Administrator'), ('Lab Assistant'),
-('Course Coordinator'), ('Adjunct'), ('Technical Staff'), ('Postdoc'), ('Dean');
+-- Drop all tables 
+DROP TABLE IF EXISTS person_address CASCADE;
+DROP TABLE IF EXISTS phone_number CASCADE;
+DROP TABLE IF EXISTS salary_history CASCADE;
+DROP TABLE IF EXISTS skill CASCADE;
+DROP TABLE IF EXISTS employee_activity CASCADE;
+DROP TABLE IF EXISTS planned_activity CASCADE;
+DROP TABLE IF EXISTS course_instance CASCADE;
+DROP TABLE IF EXISTS department CASCADE;
+DROP TABLE IF EXISTS employee CASCADE;
+DROP TABLE IF EXISTS job_title CASCADE;
+DROP TABLE IF EXISTS teaching_activity CASCADE;
+DROP TABLE IF EXISTS course_layout CASCADE;
+DROP TABLE IF EXISTS person CASCADE;
+DROP TABLE IF EXISTS address CASCADE;
 
--- -------------------------------
--- DEPARTMENT (since dependant on employee populate like that first, need to remove NOT NULL constrain form mahnager_id)
--- -------------------------------
-TRUNCATE TABLE department RESTART IDENTITY CASCADE;
-ALTER TABLE department ALTER COLUMN manager_id DROP NOT NULL; -- temporarily drop this constraint to start populating
-INSERT INTO department (department_name, manager_id) VALUES
-('Computer Science', NULL), ('Mathematics', NULL), ('Physics', NULL), ('Electrical Engineering', NULL), ('Mechanical Engineering', NULL),
-('Civil Engineering', NULL), ('Architecture', NULL), ('Chemistry', NULL), ('Biotechnology', NULL), ('Industrial Management', NULL);
+-- Drop types 
+DROP TYPE IF EXISTS STUDY_PERIOD;
+DROP TYPE IF EXISTS COUNTRY_NAME;
+---------------------------------------------------------------------------------------------------------------------
+-- ENUM TYPES
+CREATE TYPE STUDY_PERIOD AS ENUM ('P1', 'P2', 'P3', 'P4');
+CREATE TYPE COUNTRY_NAME AS ENUM ('Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Côte d''Ivoire', 'Cabo Verde', 'Cambodia', 'Cameroon', 'Canada', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo (Congo-Brazzaville)', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czechia (Czech Republic)', 'Democratic Republic of the Congo', 'Denmark', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini', 'Ethiopia', 'Fiji', 'Finland', 'France', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Holy See', 'Honduras', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Mauritania', 'Mauritius', 'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar (formerly Burma)', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'North Macedonia', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Palestine State', 'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Rwanda', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Korea', 'South Sudan', 'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland', 'Syria', 'Tajikistan', 'Tanzania', 'Thailand', 'Timor-Leste', 'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States of America', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe');
+---------------------------------------------------------------------------------------------------------------------
+-- PERSON PART OF THE MODEL
+CREATE TABLE address (
+  address_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+  street_name VARCHAR(300) NOT NULL,
+  zip VARCHAR(300) NOT NULL,
+  city VARCHAR(300) NOT NULL,
+  country COUNTRY_NAME NOT NULL
+);
 
+CREATE TABLE person (
+  person_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+  personal_number VARCHAR(12) UNIQUE NOT NULL,
+  first_name VARCHAR(300) NOT NULL,
+  last_name VARCHAR(300) NOT NULL
+);
 
-TRUNCATE TABLE employee RESTART IDENTITY CASCADE;
--- -------------------------------
--- EMPLOYEE
--- -------------------------------
-INSERT INTO employee (manager_id, person_id, job_id, department_id) VALUES
-(NULL, 1, 25, 1), (1, 2, 30, 2), (2, 3, 24, 3), (3, 4, 21, 4), (4, 5, 22, 5),
-(5, 6, 25, 6), (6, 7, 29, 7), (7, 8, 28, 8), (8, 9, 27, 9), (9, 10, 26, 10),
-(10, 11, 24, 1), (11, 12, 24, 2), (12, 13, 23, 3), (13, 14, 21, 4), (14, 15, 26, 5),
-(15, 16, 27, 6), (16, 17, 27, 7), (17, 18, 28, 8), (18, 19, 29, 9), (19, 20, 30, 10);
+CREATE TABLE person_address (
+  person_id INT NOT NULL,
+  address_id INT NOT NULL,
+  PRIMARY KEY (person_id, address_id),
+  FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE RESTRICT ON UPDATE RESTRICT, --force user to update the db
+  FOREIGN KEY (address_id) REFERENCES address(address_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
-TRUNCATE TABLE department RESTART IDENTITY CASCADE;
--- -------------------------------
--- DEPARTMENT
--- -------------------------------
-INSERT INTO department (department_name, manager_id) VALUES
-('Computer Science', 1), ('Mathematics', 2), ('Physics', 3), ('Electrical Engineering', 4), ('Mechanical Engineering', 5),
-('Civil Engineering', 6), ('Architecture', 7), ('Chemistry', 8), ('Biotechnology', 9), ('Industrial Management', 10);
-ALTER TABLE department ALTER COLUMN manager_id SET NOT NULL; -- put the not null constraint again
+CREATE TABLE phone_number (
+  phone_nb VARCHAR(10) NOT NULL,
+  person_id INT NOT NULL,
+  PRIMARY KEY (phone_nb, person_id),
+  FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
+---------------------------------------------------------------------------------------------------------------------
+--EMPLOYEE PART OF THE MODEL
+CREATE TABLE job_title (
+	job_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+	job_title VARCHAR(300)
+);
 
+CREATE TABLE employee (
+	employment_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+	manager_id INT, --can be NULL if you have no manager
+	person_id INT NOT NULL,
+	job_id INT NOT NULL,
+	department_id INT NOT NULL,
+	--FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+	FOREIGN KEY (person_id) REFERENCES person(person_id) ON DELETE 	RESTRICT ON UPDATE RESTRICT,
+	FOREIGN KEY (job_id) REFERENCES job_title(job_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+	--FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
-TRUNCATE TABLE skill RESTART IDENTITY CASCADE;
--- -------------------------------
--- SKILL
--- -------------------------------
-INSERT INTO skill (skill_name, employment_id) VALUES
-('Python', 1), ('Java', 2), ('C++', 3), ('Matlab', 4), ('R', 5), ('SQL', 6),
-('Linux', 7), ('Public Speaking', 8), ('Data Analysis', 9), ('CAD', 10),
-('Python', 11), ('Java', 12), ('C++', 13), ('Matlab', 14), ('R', 15), ('SQL', 16),
-('Linux', 17), ('Public Speaking', 18), ('Data Analysis', 19), ('CAD', 20);
+CREATE TABLE department(
+	department_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+	department_name VARCHAR(300) UNIQUE NOT NULL,
+	manager_id INT NOT NULL,
+	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
-TRUNCATE TABLE course_layout RESTART IDENTITY CASCADE;
--- -------------------------------
--- COURSE_LAYOUT
--- -------------------------------
-INSERT INTO course_layout (course_code, layout_version, course_name, min_students, max_students, hp) VALUES
-(100, 1, 'Database Systems', 10, 30, 7), (101, 1, 'Machine Learning', 11, 31, 8),
-(102, 1, 'Algorithms', 12, 32, 9), (103, 1, 'Linear Algebra', 13, 33, 10),(103, 2, 'Linear Algebra', 13, 25, 10),
-(104, 1, 'Signal Processing', 10, 34, 7), (105, 1, 'Thermodynamics', 11, 35, 8),
-(106, 1, 'Fluid Mechanics', 12, 36, 9), (107, 1, 'Organic Chemistry', 13, 37, 10),
-(108, 1, 'Control Theory', 10, 38, 7), (109, 1, 'Design Thinking', 11, 39, 8),
-(110, 1, 'Quantum Physics', 12, 30, 9), (111, 1, 'Programming', 13, 31, 10), (111, 2, 'Programming', 20, 31, 10),
-(111, 3, 'Programming', 13, 25, 15),
-(112, 1, 'Project Management', 10, 32, 7), (113, 1, 'Robotics', 11, 33, 8),
-(114, 1, 'Bioinformatics', 12, 34, 9), (115, 1, 'Digital Communications', 13, 35, 10),
-(116, 1, 'Materials Science', 10, 36, 7), (117, 1, 'Circuit Analysis', 11, 37, 8),
-(118, 1, 'Statistical Physics', 12, 38, 9), (119, 1, 'Structural Engineering', 13, 39, 10);
+CREATE TABLE salary_history(
+	salary_history_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+	monthly_salary_amount VARCHAR(300),
+	from_date TIMESTAMPTZ NOT NULL,
+	to_date TIMESTAMPTZ, --can be Null
+	employment_id INT NOT NULL,
+	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
-TRUNCATE TABLE teaching_activity RESTART IDENTITY CASCADE;
--- -------------------------------
--- TEACHING_ACTIVITY
--- -------------------------------
-INSERT INTO teaching_activity (activity_name, factor) VALUES
-('Lab', 2.4), ('Lecture', 3.6), ('Seminar', 1.8), ('Tutorial', 1.8);
+CREATE TABLE skill(
+	skill_name VARCHAR(300) NOT NULL,
+	employment_id INT NOT NULL,
+	PRIMARY KEY (skill_name, employment_id),
+	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
---other possibilities:
---('Group Work', 1.02), ('Project Supervision', 1.99),
---('Exam', 1.63), ('Demo', 1.23), ('Hackathon', 1.28), ('Workshop', 1.06), ('Guest Lecture', 0.58);
+CREATE TABLE employee_activity (
+	employment_id INT NOT NULL,
+	planned_activity_id INT NOT NULL,
+	PRIMARY KEY(employment_id, planned_activity_id),
+	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+	--FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
-TRUNCATE TABLE course_instance RESTART IDENTITY CASCADE;
--- -------------------------------
--- COURSE_INSTANCE
--- -------------------------------
---INSERT INTO course_instance (num_students, study_period, study_year, course_layout_id) VALUES
---(25, 'P1', 2025, 51), (20, 'P2', 2022, 62), (40, 'P3', 2023, 63), (10, 'P4', 2024, 54),
---(25, 'P1', 2025, 55), (30, 'P2', 2022, 56), (15, 'P3', 2023, 57), (20, 'P4', 2024, 48),
---(20, 'P1', 2025, 49), (40, 'P2', 2022, 60), (10, 'P3', 2023, 61), (30, 'P4', 2024, 62),
---(25, 'P1', 2025, 53), (10, 'P2', 2022, 54), (10, 'P3', 2023, 55), (30, 'P4', 2024, 56),
---(15, 'P1', 2025, 67), (15, 'P2', 2022, 48), (30, 'P3', 2023, 59), (30, 'P4', 2024, 50);
+---------------------------------------------------------------------------------------------------------------------
+-- COURSE PART OF THE MODEL
 
---changed to fit query 4
-INSERT INTO course_instance (num_students, study_period, study_year, course_layout_id) VALUES
-(25, 'P2', 2025, 51), (20, 'P1', 2022, 62), (40, 'P3', 2023, 63), (10, 'P4', 2024, 54),
-(25, 'P2', 2025, 55), (30, 'P2', 2022, 56), (15, 'P3', 2023, 57), (20, 'P4', 2024, 48),
-(20, 'P2', 2025, 49), (40, 'P2', 2022, 60), (10, 'P3', 2023, 61), (30, 'P4', 2024, 62),
-(25, 'P1', 2025, 53), (10, 'P2', 2022, 54), (10, 'P3', 2023, 55), (30, 'P4', 2024, 56),
-(15, 'P2', 2025, 67), (15, 'P2', 2022, 48), (30, 'P3', 2023, 59), (30, 'P4', 2024, 50);
+CREATE TABLE course_layout (
+  course_layout_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+  course_code INT NOT NULL,
+  layout_version INT NOT NULL,
+  course_name VARCHAR(300) NOT NULL,
+  min_students INT NOT NULL,
+  max_students INT NOT NULL,
+  hp INT NOT null,
+  CONSTRAINT unique_course_version UNIQUE (course_code, layout_version) --
+);
 
-TRUNCATE TABLE planned_activity RESTART IDENTITY CASCADE;
--- -------------------------------
--- PLANNED_ACTIVITY
--- -------------------------------
---INSERT INTO planned_activity (planned_nb_hours, instance_id, teaching_activity_id) VALUES
---(10, 1, 1), (11, 2, 1), (12, 3, 1), (13, 4, 1), (14, 5, 1),
---(15, 6, 2), (16, 7, 2), (17, 8, 2), (18, 9, 2), (19, 10, 2),
---(20, 11, 3), (21, 12, 3), (22, 13, 3), (23, 14, 3), (24, 15, 3),
---(25, 16, 4), (26, 17, 4), (27, 18, 4), (28, 19, 4), (29, 20, 4);
-  
--- changed to fit the query 2
-INSERT INTO planned_activity (planned_nb_hours, instance_id, teaching_activity_id) VALUES
-(10, 1, 1), (11, 2, 1), (12, 3, 1), (13, 4, 1), (14, 5, 1),
-(15, 1, 2), (16, 7, 2), (17, 8, 2), (18, 9, 2), (19, 10, 2),
-(20, 11, 3), (21, 1, 3), (22, 13, 3), (23, 14, 3), (24, 15, 3),
-(25, 16, 4), (26, 17, 4), (27, 1, 4), (28, 19, 4), (29, 20, 4);
-TRUNCATE TABLE employee_activity RESTART IDENTITY CASCADE;
--- -------------------------------
--- EMPLOYEE_ACTIVITY
--- -------------------------------
-INSERT INTO employee_activity (employment_id, planned_activity_id) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10),
-(11, 11), (12, 12), (13, 13), (14, 14), (15, 15), (16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
+CREATE TABLE teaching_activity (
+  teaching_activity_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+  activity_name VARCHAR(300) NOT null UNIQUE,
+  factor FLOAT(10) NOT NULL
+);
 
-TRUNCATE TABLE person_address RESTART IDENTITY CASCADE;
--- -------------------------------
--- PERSON_ADDRESS
--- -------------------------------
-INSERT INTO person_address (person_id, address_id) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10),
-(11, 11), (12, 12), (13, 13), (14, 14), (15, 15), (16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
+CREATE TABLE course_instance (
+  instance_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+  num_students INT NOT NULL,
+  study_period STUDY_PERIOD NOT NULL,
+  study_year INT NOT NULL,
+  course_layout_id INT NOT NULL,
+ FOREIGN KEY (course_layout_id ) REFERENCES course_layout(course_layout_id ) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
+CREATE TABLE planned_activity (
+  planned_activity_id INT GENERATED BY DEFAULT AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
+  planned_nb_hours INT NOT NULL,
+  instance_id INT NOT NULL,
+  teaching_activity_id INT NOT NULL,
+  FOREIGN KEY (instance_id) REFERENCES course_instance(instance_id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  FOREIGN KEY (teaching_activity_id) REFERENCES teaching_activity(teaching_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
+);
 
-TRUNCATE TABLE salary_history RESTART IDENTITY CASCADE;
--- -------------------------------
--- SALARY_HISTORY
--- -------------------------------
-INSERT INTO salary_history (monthly_salary_amount, from_date, to_date, employment_id) VALUES
--- Employees with a salary history (2 entries)
-('65000', '2020-01-01', '2021-12-31', 1), 
-('70000', '2022-01-01', NULL, 1),         
-('70000', '2019-06-01', '2021-05-31', 2),
-('75000', '2021-06-01', NULL, 2),         
-('50000', '2019-01-01', '2020-12-31', 5),
-('55000', '2021-01-01', NULL, 5),        
-('58000', '2020-03-01', '2023-02-28', 10),
-('62000', '2023-03-01', NULL, 10),        
-('66000', '2021-01-01', '2022-12-31', 11),
-('69000', '2023-01-01', NULL, 11),        
-('48000', '2023-01-01', NULL, 3), 
-('68000', '2022-01-01', NULL, 4),  
-('56000', '2022-01-01', NULL, 6),  
-('51000', '2022-01-01', NULL, 7),  
-('45000', '2022-01-01', NULL, 8),  
-('53000', '2022-01-01', NULL, 9), 
-('50000', '2022-01-01', NULL, 12), 
-('49000', '2022-01-01', NULL, 13), 
-('67000', '2022-01-01', NULL, 14), 
-('60000', '2022-01-01', NULL, 15),
-('52000', '2022-01-01', NULL, 16), 
-('51500', '2022-01-01', NULL, 17), 
-('46000', '2022-01-01', NULL, 18),
-('54000', '2022-01-01', NULL, 19),
-('72000', '2022-01-01', NULL, 20); 
+--add foreign keys and avoid cyclic dependencies in postgres:
+ALTER TABLE employee
+	ADD CONSTRAINT fk_employee_manager
+	FOREIGN KEY (manager_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE employee
+	ADD CONSTRAINT fk_employee_department
+	FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE employee_activity
+	ADD CONSTRAINT fk_planned_activity_id
+	FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+---------------------------------------------------------------------------------------------------------------------
+-- add triggers
+CREATE OR REPLACE FUNCTION check_teacher_max_course_instances()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_study_period  STUDY_PERIOD;
+    v_study_year    INT;
+    v_instance_id   INT;
+    v_course_count  INT;
+BEGIN
+    SELECT ci.study_period, ci.study_year, ci.instance_id INTO v_study_period, v_study_year, v_instance_id
+    FROM planned_activity pa
+    JOIN course_instance ci ON pa.instance_id = ci.instance_id
+    WHERE pa.planned_activity_id = NEW.planned_activity_id;
 
+    SELECT COUNT(DISTINCT ci2.instance_id) INTO v_course_count
+    FROM employee_activity ea
+    JOIN planned_activity pa2 ON ea.planned_activity_id = pa2.planned_activity_id
+    JOIN course_instance ci2 ON pa2.instance_id = ci2.instance_id
+    WHERE ea.employment_id = NEW.employment_id
+      AND ci2.study_period = v_study_period
+      AND ci2.study_year = v_study_year;
 
+IF v_course_count >= 4 
+       AND NOT EXISTS (
+           SELECT 1 FROM employee_activity ea
+           JOIN planned_activity pa2 ON ea.planned_activity_id = pa2.planned_activity_id
+           WHERE ea.employment_id = NEW.employment_id
+             AND pa2.instance_id = v_instance_id
+       ) THEN
+        RAISE EXCEPTION 'Teacher % already has 4 course instances in study period % year %', NEW.employment_id, v_study_period, v_study_year;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER employee_max_course_instances_per_period_and_year
+BEFORE INSERT ON employee_activity
+FOR EACH ROW
+EXECUTE FUNCTION check_teacher_max_course_instances();
+
+-- view for derived data 
+---------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE VIEW  v_full_course_workload AS
+
+-- all the manually entered hours
+SELECT
+    pa.planned_activity_id,
+    pa.instance_id,
+    ta.activity_name,
+    ta.factor,
+    pa.planned_nb_hours,
+   (pa.planned_nb_hours * ta.factor) AS total_teachers_hours
+FROM
+    planned_activity pa
+JOIN
+    teaching_activity ta ON pa.teaching_activity_id = ta.teaching_activity_id
+WHERE
+    ta.activity_name NOT IN ('Examination', 'Administration')
+
+UNION ALL
+
+-- calculate the Examination hours
+SELECT
+    NULL AS planned_activity_id, 
+    ci.instance_id,
+    'Examination' AS activity_name,
+     NULL AS factor,
+     NULL AS planned_nb_hours,
+    (32 + 0.725 * ci.num_students) AS  total_teachers_hours 
+FROM
+    course_instance ci
+
+UNION ALL
+
+-- calculatethe Administration hours
+SELECT
+    NULL AS planned_activity_id,
+    ci.instance_id,
+    'Administration' AS activity_name,
+     NULL AS factor,
+     NULL AS planned_nb_hours,
+    (2 * cl.hp + 28 + 0.2 * ci.num_students) AS total_teachers_hours 
+FROM
+    course_instance ci
+JOIN
+    course_layout cl ON ci.course_layout_id = cl.course_layout_id;
