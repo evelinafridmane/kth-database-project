@@ -1,3 +1,5 @@
+CREATE INDEX IF NOT EXISTS idx_planned_activity_instance ON planned_activity (instance_id);
+EXPLAIN ANALYZE
 SELECT
     cl.course_code AS "Course Code",
     ci.instance_id AS "Course Instance ID",
