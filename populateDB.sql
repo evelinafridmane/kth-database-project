@@ -1,4 +1,18 @@
 TRUNCATE TABLE address RESTART IDENTITY CASCADE;
+TRUNCATE TABLE person RESTART IDENTITY CASCADE;
+TRUNCATE TABLE phone_number RESTART IDENTITY CASCADE;
+TRUNCATE TABLE job_title RESTART IDENTITY CASCADE;
+TRUNCATE TABLE department RESTART IDENTITY CASCADE;
+TRUNCATE TABLE employee RESTART IDENTITY CASCADE;
+TRUNCATE TABLE skill RESTART IDENTITY CASCADE;
+TRUNCATE TABLE course_layout RESTART IDENTITY CASCADE;
+TRUNCATE TABLE teaching_activity RESTART IDENTITY CASCADE;
+TRUNCATE TABLE course_instance RESTART IDENTITY CASCADE;
+TRUNCATE TABLE planned_activity RESTART IDENTITY CASCADE;
+TRUNCATE TABLE employee_activity RESTART IDENTITY CASCADE;
+TRUNCATE TABLE person_address RESTART IDENTITY CASCADE;
+TRUNCATE TABLE salary_history RESTART IDENTITY CASCADE;
+
 -- -------------------------------
 -- ADDRESS - all Sweden for country
 -- -------------------------------
@@ -24,7 +38,6 @@ INSERT INTO address (street_name, zip, city, country) VALUES
 ('Hantverkargatan', '11512', 'Stockholm', 'Sweden'),
 ('Tegnergatan', '11613', 'Stockholm', 'Sweden');
 
-TRUNCATE TABLE person RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- PERSON
 -- -------------------------------
@@ -50,7 +63,6 @@ INSERT INTO person (personal_number, first_name, last_name) VALUES
 ('199808034740', 'Nina', 'Nordin'),
 ('199911191526', 'Axel', 'Westin');
 
-TRUNCATE TABLE phone_number RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- PHONE_NUMBER
 -- -------------------------------
@@ -60,7 +72,6 @@ INSERT INTO phone_number (phone_nb, person_id) VALUES
 ('0707636931', 11), ('0703829417', 12), ('0701126724', 13), ('0702820493', 14), ('0706367444', 15),
 ('0701717955', 16), ('0705209512', 17), ('0705441941', 18), ('0707411053', 19), ('0708679152', 20);
 
-TRUNCATE TABLE job_title RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- JOB_TITLE
 -- -------------------------------
@@ -71,34 +82,35 @@ INSERT INTO job_title (job_title) VALUES
 -- -------------------------------
 -- DEPARTMENT (since dependant on employee populate like that first, need to remove NOT NULL constrain form mahnager_id)
 -- -------------------------------
-TRUNCATE TABLE department RESTART IDENTITY CASCADE;
 ALTER TABLE department ALTER COLUMN manager_id DROP NOT NULL; -- temporarily drop this constraint to start populating
 INSERT INTO department (department_name, manager_id) VALUES
 ('Computer Science', NULL), ('Mathematics', NULL), ('Physics', NULL), ('Electrical Engineering', NULL), ('Mechanical Engineering', NULL),
 ('Civil Engineering', NULL), ('Architecture', NULL), ('Chemistry', NULL), ('Biotechnology', NULL), ('Industrial Management', NULL);
 
-
-TRUNCATE TABLE employee RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- EMPLOYEE
 -- -------------------------------
 INSERT INTO employee (manager_id, person_id, job_id, department_id) VALUES
-(NULL, 1, 25, 1), (1, 2, 30, 2), (2, 3, 24, 3), (3, 4, 21, 4), (4, 5, 22, 5),
-(5, 6, 25, 6), (6, 7, 29, 7), (7, 8, 28, 8), (8, 9, 27, 9), (9, 10, 26, 10),
-(10, 11, 24, 1), (11, 12, 24, 2), (12, 13, 23, 3), (13, 14, 21, 4), (14, 15, 26, 5),
-(15, 16, 27, 6), (16, 17, 27, 7), (17, 18, 28, 8), (18, 19, 29, 9), (19, 20, 30, 10);
+(NULL, 1, 5, 1), (1, 2, 10, 2), (2, 3, 4, 3), (3, 4, 1, 4), (4, 5, 2, 5),
+(5, 6, 5, 6), (6, 7, 9, 7), (7, 8, 8, 8), (8, 9, 7, 9), (9, 10, 6, 10),
+(10, 11, 4, 1), (11, 12, 4, 2), (12, 13, 3, 3), (13, 14, 1, 4), (14, 15, 6, 5),
+(15, 16, 7, 6), (16, 17, 7, 7), (17, 18, 8, 8), (18, 19, 9, 9), (19, 20, 10, 10);
 
-TRUNCATE TABLE department RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- DEPARTMENT
 -- -------------------------------
-INSERT INTO department (department_name, manager_id) VALUES
-('Computer Science', 1), ('Mathematics', 2), ('Physics', 3), ('Electrical Engineering', 4), ('Mechanical Engineering', 5),
-('Civil Engineering', 6), ('Architecture', 7), ('Chemistry', 8), ('Biotechnology', 9), ('Industrial Management', 10);
-ALTER TABLE department ALTER COLUMN manager_id SET NOT NULL; -- put the not null constraint again
+UPDATE department SET manager_id = 1 WHERE department_name = 'Computer Science';
+UPDATE department SET manager_id = 2 WHERE department_name = 'Mathematics';
+UPDATE department SET manager_id = 3 WHERE department_name = 'Physics';
+UPDATE department SET manager_id = 4 WHERE department_name = 'Electrical Engineering';
+UPDATE department SET manager_id = 5 WHERE department_name = 'Mechanical Engineering';
+UPDATE department SET manager_id = 6 WHERE department_name = 'Civil Engineering';
+UPDATE department SET manager_id = 7 WHERE department_name = 'Architecture';
+UPDATE department SET manager_id = 8 WHERE department_name = 'Chemistry';
+UPDATE department SET manager_id = 9 WHERE department_name = 'Biotechnology';
+UPDATE department SET manager_id = 10 WHERE department_name = 'Industrial Management';
+ALTER TABLE department ALTER COLUMN manager_id SET NOT NULL;
 
-
-TRUNCATE TABLE skill RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- SKILL
 -- -------------------------------
@@ -108,7 +120,6 @@ INSERT INTO skill (skill_name, employment_id) VALUES
 ('Python', 11), ('Java', 12), ('C++', 13), ('Matlab', 14), ('R', 15), ('SQL', 16),
 ('Linux', 17), ('Public Speaking', 18), ('Data Analysis', 19), ('CAD', 20);
 
-TRUNCATE TABLE course_layout RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- COURSE_LAYOUT
 -- -------------------------------
@@ -125,7 +136,6 @@ INSERT INTO course_layout (course_code, layout_version, course_name, min_student
 (116, 1, 'Materials Science', 10, 36, 7), (117, 1, 'Circuit Analysis', 11, 37, 8),
 (118, 1, 'Statistical Physics', 12, 38, 9), (119, 1, 'Structural Engineering', 13, 39, 10);
 
-TRUNCATE TABLE teaching_activity RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- TEACHING_ACTIVITY
 -- -------------------------------
@@ -136,7 +146,6 @@ INSERT INTO teaching_activity (activity_name, factor) VALUES
 --('Group Work', 1.02), ('Project Supervision', 1.99),
 --('Exam', 1.63), ('Demo', 1.23), ('Hackathon', 1.28), ('Workshop', 1.06), ('Guest Lecture', 0.58);
 
-TRUNCATE TABLE course_instance RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- COURSE_INSTANCE
 -- -------------------------------
@@ -149,13 +158,12 @@ TRUNCATE TABLE course_instance RESTART IDENTITY CASCADE;
 
 --changed to fit query 4
 INSERT INTO course_instance (num_students, study_period, study_year, course_layout_id) VALUES
-(25, 'P2', 2025, 51), (20, 'P1', 2022, 62), (40, 'P3', 2023, 63), (10, 'P4', 2024, 54),
-(25, 'P2', 2025, 55), (30, 'P2', 2022, 56), (15, 'P3', 2023, 57), (20, 'P4', 2024, 48),
-(20, 'P2', 2025, 49), (40, 'P2', 2022, 60), (10, 'P3', 2023, 61), (30, 'P4', 2024, 62),
-(25, 'P1', 2025, 53), (10, 'P2', 2022, 54), (10, 'P3', 2023, 55), (30, 'P4', 2024, 56),
-(15, 'P2', 2025, 67), (15, 'P2', 2022, 48), (30, 'P3', 2023, 59), (30, 'P4', 2024, 50);
+(25, 'P2', 2025, 1), (20, 'P1', 2022, 2), (40, 'P3', 2023, 13), (10, 'P4', 2024, 14),
+(25, 'P2', 2025, 5), (30, 'P2', 2022, 6), (15, 'P3', 2023, 7), (20, 'P4', 2024, 18),
+(20, 'P2', 2025, 9), (40, 'P2', 2022, 20), (10, 'P3', 2023, 12), (30, 'P4', 2024, 2),
+(25, 'P1', 2025, 23), (10, 'P2', 2022, 14), (10, 'P3', 2023, 15), (30, 'P4', 2024, 16),
+(15, 'P2', 2025, 17), (15, 'P2', 2022, 18), (30, 'P3', 2023, 9), (30, 'P4', 2024, 20);
 
-TRUNCATE TABLE planned_activity RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- PLANNED_ACTIVITY
 -- -------------------------------
@@ -171,7 +179,7 @@ INSERT INTO planned_activity (planned_nb_hours, instance_id, teaching_activity_i
 (15, 1, 2), (16, 7, 2), (17, 8, 2), (18, 9, 2), (19, 10, 2),
 (20, 11, 3), (21, 1, 3), (22, 13, 3), (23, 14, 3), (24, 15, 3),
 (25, 16, 4), (26, 17, 4), (27, 1, 4), (28, 19, 4), (29, 20, 4);
-TRUNCATE TABLE employee_activity RESTART IDENTITY CASCADE;
+
 -- -------------------------------
 -- EMPLOYEE_ACTIVITY
 -- -------------------------------
@@ -179,7 +187,6 @@ INSERT INTO employee_activity (employment_id, planned_activity_id) VALUES
 (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10),
 (11, 11), (12, 12), (13, 13), (14, 14), (15, 15), (16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
 
-TRUNCATE TABLE person_address RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- PERSON_ADDRESS
 -- -------------------------------
@@ -187,8 +194,6 @@ INSERT INTO person_address (person_id, address_id) VALUES
 (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10),
 (11, 11), (12, 12), (13, 13), (14, 14), (15, 15), (16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
 
-
-TRUNCATE TABLE salary_history RESTART IDENTITY CASCADE;
 -- -------------------------------
 -- SALARY_HISTORY
 -- -------------------------------
