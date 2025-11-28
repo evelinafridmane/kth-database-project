@@ -33,3 +33,9 @@ GROUP BY
   cl.course_code, ci.instance_id, cl.hp, ci.study_period, p.first_name, p.last_name
 ORDER BY
   cl.course_code, ci.instance_id;
+
+/*
+"Course Code"	"Course Instance ID"	"HP"	"Period"	"Teacher's Name"	"Lecture Hours"	"Tutorial Hours"	"Lab Hours"	"Seminar Hours"	"Other Overhead Hours"	"Admin"	"Exam"	"Total Hours"
+100	1	7	"P2"	"Filip Eriksson"	0	0	0	0	1	0	0	1
+113	17	8	"P2"	"Filip Eriksson"	93.59999752044678	0	0	0	0	0	0	93.59999752044678
+*/
