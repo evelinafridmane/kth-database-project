@@ -13,9 +13,10 @@ SELECT
   SUM(CASE WHEN ta.activity_name = 'Lab' THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Lab Hours",
   SUM(CASE WHEN ta.activity_name = 'Seminar' THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Seminar Hours",
   SUM(CASE WHEN ta.activity_name = 'Overhead' THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Other Overhead Hours",
-  SUM(CASE WHEN ta.activity_name = 'Administration' THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Admin",
-  SUM(CASE WHEN ta.activity_name = 'Examination' THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Exam",
-  SUM(pa.planned_nb_hours * ta.factor) AS "Total Hours"
+	
+  (2*cl.hp+28+0.2*ci.num_students) AS "Administration Hours",
+  (32+0.725*ci.num_students) AS "Examination Hours",
+  SUM(pa.planned_nb_hours*ta.factor)+(2*cl.hp+28+0.2*ci.num_students)+(32+0.725*ci.num_students) AS "Total Hours" --= all planned * factor + Admin + Exam
   
 FROM
   employee AS e
