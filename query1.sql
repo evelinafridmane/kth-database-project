@@ -1,38 +1,47 @@
 -- Planned hours calculations: 
 -- Calculate the total hours (with the multiplication factor) along with the break-ups for each activity, for the current years’ course instances. 
 
--- EXPLAIN (ANALYZE)
 SELECT
-	cl.course_code AS "Course code",
-	ci.instance_id AS "Course instance ID",
-	cl.hp AS "HP",
-	ci.study_period AS "Study period",
-	ci.num_students AS "Number of students",
-	SUM(CASE WHEN fcw.activity_name = 'Lecture' THEN fcw.total_teachers_hours ELSE 0 END) AS "Lectures",
-	SUM(CASE WHEN fcw.activity_name = 'Tutorial' THEN fcw.total_teachers_hours ELSE 0 END) AS "Tutorial Hours",
-	SUM(CASE WHEN fcw.activity_name = 'Seminar' THEN fcw.total_teachers_hours ELSE 0 END) AS "Seminar Hours",
-	SUM(CASE WHEN fcw.activity_name = 'Overhead' THEN fcw.total_teachers_hours ELSE 0 END) AS "Other Overhead Hours",
-	SUM(CASE WHEN fcw.activity_name = 'Administration' THEN fcw.total_teachers_hours ELSE 0 END) AS "Administration Hours",
-	SUM(CASE WHEN fcw.activity_name = 'Examination' THEN fcw.total_teachers_hours ELSE 0 END) AS "Examination Hours",
-	SUM(fcw.total_teachers_hours) AS "Total Hours"
+    cl.course_code AS "Course Code",
+    ci.instance_id AS "Course Instance ID",
+    cl.hp AS "HP",
+    ci.study_period AS "Period",
+    ci.num_students AS "# Students",
 
-FROM v_full_course_workload AS fcw
-JOIN course_instance AS ci ON fcw.instance_id = ci.instance_id
-JOIN course_layout AS cl ON cl.course_layout_id = ci.course_layout_id
+    SUM(CASE WHEN ta.activity_name = 'Lecture'
+             THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Lecture Hours",
+    SUM(CASE WHEN ta.activity_name = 'Tutorial'
+             THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Tutorial Hours",
+    SUM(CASE WHEN ta.activity_name = 'Lab'
+             THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Lab Hours",
+    SUM(CASE WHEN ta.activity_name = 'Seminar'
+             THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Seminar Hours",
+    SUM(CASE WHEN ta.activity_name = 'Overhead'
+             THEN pa.planned_nb_hours * ta.factor ELSE 0 END) AS "Other Overhead Hours",
+	
+    (2*cl.hp+28+0.2*ci.num_students) AS "Administration Hours",
+    (32+0.725*ci.num_students) AS "Examination Hours",
+    SUM(pa.planned_nb_hours*ta.factor)+(2*cl.hp+28+0.2*ci.num_students)+(32+0.725*ci.num_students) AS "Total Hours" --= all planned * factor + Admin + Exam
 
-WHERE ci.study_year = EXTRACT(YEAR FROM CURRENT_DATE)
+FROM course_instance AS ci
+JOIN course_layout AS cl ON ci.course_layout_id=cl.course_layout_id
+JOIN planned_activity AS pa ON ci.instance_id=pa.instance_id
+JOIN teaching_activity AS ta ON pa.teaching_activity_id=ta.teaching_activity_id
+
+WHERE
+    ci.study_year = EXTRACT(YEAR FROM CURRENT_DATE)
+
 GROUP BY
-	cl.course_code,
-	ci.instance_id,
-	cl.hp,
-	ci.study_period,
-	ci.num_students
+    cl.course_code, ci.instance_id,cl.hp, ci.study_period, ci.num_students
+
+ORDER BY
+    cl.course_code, ci.instance_id;
 
 /*
-"Course code"	"Course instance ID"	"HP"	"Study period"	"Number of students"	"Lectures"	"Tutorial Hours"	"Seminar Hours"	"Other Overhead Hours"	"Administration Hours"	"Examination Hours"	"Total Hours"
-102	9	9	"P1"	20	64.79999828338623	0	0	0	50	46.5	161.29999828338623
-103	1	10	"P1"	25	0	0	0	0	53	50.125	127.12500095367432
-105	13	8	"P1"	25	0	0	39.59999895095825	0	49	50.125	138.72499895095825
-107	5	10	"P1"	25	0	0	0	0	53	50.125	136.72500133514404
-117	17	8	"P1"	15	0	46.79999876022339	0	0	47	42.875	136.6749987602234
+"Course Code"	"Course Instance ID"	"HP"	"Period"	"# Students"	"Lecture Hours"	"Tutorial Hours"	"Lab Hours"	"Seminar Hours"	"Other Overhead Hours"	"Admin"	"Exam"	"Total Hours"
+100	1	7	"P2"	25	161.99999570846558	102.5999972820282	24.000000953674316	91.7999975681305	15	47.0	50.125	492.5249915122986
+103	5	10	"P2"	25	122.39999675750732	61.19999837875366	33.60000133514404	61.19999837875366	1	53.0	50.125	382.5249948501587
+107	9	10	"P2"	20	64.79999828338623	68.3999981880188	43.20000171661377	68.3999981880188	1	52.0	46.500	344.2999963760376
+113	17	8	"P2"	15	93.59999752044678	46.79999876022339	62.40000247955322	46.79999876022339	6	47.0	42.875	345.4749975204468
+119	13	10	"P1"	25	79.1999979019165	75.59999799728394	52.800002098083496	39.59999895095825	4	53.0	50.125	354.3249969482422
 */
