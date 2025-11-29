@@ -1,0 +1,23 @@
+                    course_instance
+                         |
+                    index scan
+                         |
+planned_activity    filter (period/date)
+      |             /
+  seq scan       cache         employee_activity
+        \       /                  |
+         nested loop        index only scan
+                \          /
+                 nested loop        employee           
+                      \                |                 
+                       nested loop   index scan      person
+                            \          /                |
+                             nested loop          index scan
+                                  \              /
+                                   nested loop
+                                        |
+                                 sort (quicksort)
+                                        |
+                                 group aggregate
+                                        |
+                                filter (HAVING > 0)
