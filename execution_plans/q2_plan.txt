@@ -1,0 +1,19 @@
+    [ Count Teachers]
+          |
+    Hash Join (planned_activity + employee_activity)
+          |
+    GroupAggregate (Count)
+          |
+    [Main Query Logic]
+          |
+    Hash Join (Combine activities)
+          |
+    Nested Loops (Join with Course Instance & Layout)
+          |
+    Hash Join (Join with Teaching Activity)
+          |
+    Nested Loops (Join with Employee, Job Title, Person)
+          |
+    Sort (Quicksort by Course & Teacher)
+          |
+    GroupAggregate (Final Sums & Formulas)
