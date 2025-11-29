@@ -1,0 +1,25 @@
+            course_instance
+                |
+            index scan
+                |
+plan_act    filter(year)
+   |           /
+seq scan    cache        employee_activity
+    \      /                |
+     nested loop        index only scan
+            \          /
+             nested loop        employee       person
+                    \               |            |
+                      \         index scan    index scan
+                        \          /          / 
+                         nested loop     filter    teach_act 
+                                \          /          /
+             course_layout       nested loop     index scan
+                         \               \        /
+                         index scan      nested loop
+                                  \          /  
+                                   nested loop
+                                      |
+                                     sort (quicksort)
+                                      |
+                                 group aggregate
