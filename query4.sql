@@ -37,10 +37,21 @@ HAVING
     COUNT(DISTINCT ci.instance_id) > 0;
 
 Employment ID	Teacher's Name		Period		"No of courses"
-1		Anna Andersson		P2		1
-5		Lisa Karlsson		P2		1
-6		Jonas Johansson		P2		1
-9		Eva Larsson		P2		1
-12		Filip Eriksson		P2		1
-17		Isabel Magnusson	P2		1
-18		Sven Lund		P2		1
+1	Anna Andersson	P2	1
+2	Erik Berg	P2	2
+3	Karin Ekström	P2	1
+4	Oskar Nilsson	P2	1
+5	Lisa Karlsson	P2	1
+6	Jonas Johansson	P2	1
+7	Sara Persson	P2	1
+9	Eva Larsson	P2	1
+10	Johan Lindberg	P2	1
+11	Maria Lindgren	P2	1
+12	Filip Eriksson	P2	2
+14	Fredrik Danielsson	P2	1
+15	Emma Holm	P2	1
+16	Niklas Olsson	P2	1
+17	Isabel Magnusson	P2	1
+18	Sven Lund	P2	1
+19	Nina Nordin	P2	1
+20	Axel Westin	P2	1
