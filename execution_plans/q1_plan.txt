@@ -1,0 +1,17 @@
+    course instance
+        |
+filter by current year
+        |
+    index scan     planned activity
+        |               |
+cache (memoize)    seq scan     course_layout
+              \    /                 |
+             nested loop       index scan      teaching_activity
+                      \        /               |
+                       nested loop      index scan
+                               \      /
+                               nested loop
+                                    |
+                                   sort (quicksort)
+                                    |
+                               group aggregate
