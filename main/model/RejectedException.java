@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-package se.kth.iv1351.bankjdbc.model;
+package main.model;
 
 /**
  * Thrown when create, read or delete of an account fails.

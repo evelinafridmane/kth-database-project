@@ -22,13 +22,13 @@
  * THE SOFTWARE.
  */
 
-package se.kth.iv1351.bankjdbc.view;
+package main.view;
 
 import java.util.List;
 import java.util.Scanner;
 
-import se.kth.iv1351.bankjdbc.controller.Controller;
-import se.kth.iv1351.bankjdbc.model.AccountDTO;
+import main.controller.Controller;
+import main.model.AccountDTO;
 
 /**
  * Reads and interprets user commands. This command interpreter is blocking, the user

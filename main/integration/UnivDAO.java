@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-package se.kth.iv1351.bankjdbc.integration;
+package main.integration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,8 +31,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.kth.iv1351.bankjdbc.model.Account;
-import se.kth.iv1351.bankjdbc.model.AccountDTO;
+import main.model.Account;
+import main.model.AccountDTO;
 
 /**
  * This data access object (DAO) encapsulates all database calls in the bank

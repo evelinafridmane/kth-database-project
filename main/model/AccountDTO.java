@@ -21,7 +21,7 @@
  * THE SOFTWARE.
  */
 
-package se.kth.iv1351.bankjdbc.model;
+package main.model;
 
 /**
  * Specifies a read-only view of an account.
