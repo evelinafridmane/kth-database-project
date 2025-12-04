@@ -27,41 +27,15 @@ package main.view;
 /**
  * Defines all commands that can be performed by a user of the chat application.
  */
+
 public enum Command {
-    /**
-     * Creates a new account.
-     */
-    NEW,
-    /**
-     * Lists all existing accounts.
-     */
-    LIST,
-    /**
-     * Deletes the specified account.
-     */
-    DELETE,
-    /**
-     * Deposits the specified amount to the specified account
-     */
-    DEPOSIT,
-    /**
-     * Withdraws the specified amount from the specified account
-     */
-    WITHDRAW,
-    /**
-     * Lists the balance of the specified account.
-     */
-    BALANCE,
-    /**
-     * Lists all commands.
-     */
+    CALCULATE_COST,      // Task 1: Calculate teaching cost
+    INCREASE_STUDENTS,   // Task 2: Increase registered students
+    ALLOCATE_TEACHER,    // Task 3: Allocate teacher
+    DEALLOCATE_TEACHER,  // Task 3: Deallocate teacher
+    ADD_EXERCISE_ACTIVITY, // Task 4: Add exercise activity
+    SHOW_ALLOCATIONS,    // Additional: Show current allocations
     HELP,
-    /**
-     * Leave the chat application.
-     */
     QUIT,
-    /**
-     * None of the valid commands above was specified.
-     */
     ILLEGAL_COMMAND
 }
