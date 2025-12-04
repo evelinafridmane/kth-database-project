@@ -77,41 +77,29 @@ public class BlockingInterpreter {
                         break;
                     case QUIT:
                         keepReceivingCmds = false;
+                        break;    case CALCULATE_COST:
+                        // Calculate teaching cost for a course instance
+                        // Parameters might be: course code, year, period
                         break;
-                    case NEW:
-                        ctrl.createAccount(cmdLine.getParameter(0));
+
+                    case INCREASE_STUDENTS:
+                        // Increase registered students by 100
+                        // Parameters: course instance ID
                         break;
-                    case DELETE:
-                        ctrl.deleteAccount(cmdLine.getParameter(0));
+
+                    case ALLOCATE_TEACHER:
+                        // Allocate teacher to teaching activity
+                        // Parameters: teacher ID, course instance ID, activity type
+                        // Must check the 4-course-per-period limit
                         break;
-                    case LIST:
-                        List<? extends AccountDTO> accounts = null;
-                        if (cmdLine.getParameter(0).equals("")) {
-                            accounts = ctrl.getAllAccounts();
-                        } else {
-                            accounts = ctrl.getAccountsForHolder(cmdLine.getParameter(0));
-                        }
-                        for (AccountDTO account : accounts) {
-                            System.out.println("acct no: " + account.getAccountNo() + ", "
-                                    + "holder: " + account.getHolderName() + ", "
-                                    + "balance: " + account.getBalance());
-                        }
+
+                    case DEALLOCATE_TEACHER:
+                        // Deallocate teacher from activity
                         break;
-                    case DEPOSIT:
-                        ctrl.deposit(cmdLine.getParameter(0),
-                                Integer.parseInt(cmdLine.getParameter(1)));
-                        break;
-                    case WITHDRAW:
-                        ctrl.withdraw(cmdLine.getParameter(0),
-                                Integer.parseInt(cmdLine.getParameter(1)));
-                        break;
-                    case BALANCE:
-                        AccountDTO acct = ctrl.getAccount(cmdLine.getParameter(0));
-                        if (acct != null) {
-                            System.out.println(acct.getBalance());
-                        } else {
-                            System.out.println("No such account");
-                        }
+
+                    case ADD_EXERCISE_ACTIVITY:
+                        // Add new "Exercise" activity type
+                        // Associate with course instance and allocate teacher
                         break;
                     default:
                         System.out.println("illegal command");

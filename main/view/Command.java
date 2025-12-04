@@ -27,7 +27,6 @@ package main.view;
 /**
  * Defines all commands that can be performed by a user of the chat application.
  */
-
 public enum Command {
     CALCULATE_COST,      // Task 1: Calculate teaching cost
     INCREASE_STUDENTS,   // Task 2: Increase registered students
