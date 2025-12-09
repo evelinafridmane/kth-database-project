@@ -8,15 +8,8 @@ public class TeachingCostDAO {
 
     public TeachingCostDAO(Connection connection) {
         this.connection = connection;
-    }
+    } //conctructor
 
-    /**
-     * Calculates the real average hourly rate from the DB.
-     * Logic: 
-     * 1. Selects only 'current' salaries (where to_date IS NULL).
-     * 2. Casts the text salary to a number (::numeric).
-     * 3. Averages them and divides by 160 (standard work hours).
-     */
     public double calculateAverageHourlyRate() throws SQLException {
         String sql = """
             SELECT AVG(CAST(monthly_salary_amount AS NUMERIC)) / 160.0 
@@ -42,22 +35,22 @@ public class TeachingCostDAO {
         ci.instance_id, 
         ci.study_period,
         
-        -- 1. PLANNED COST (Total Hours from View * Hourly Rate)
+        -- PLANNED COST (Total Hours from View * Hourly Rate)
 
         (SELECT SUM(total_teachers_hours) 
          FROM v_full_course_workload 
          WHERE instance_id = ci.instance_id) * ? AS planned_cost,
 
-        -- 2. ACTUAL COST CALCULATION
+        -- ACTUAL COST 
 
         (
-          --  Teacher Hours (Sum of all assigned work)
+          --  Teacher Hours 
           SUM(ta.factor * pa.planned_nb_hours) 
           + 
-          --  Admin Formula (Added once using MAX)
+          --  Admin Formula 
           MAX(2 * cl.hp + 28 + 0.2 * ci.num_students) 
           + 
-          --  Exam Formula (Added once using MAX)
+          --  Exam Formula 
           MAX(32 + 0.725 * ci.num_students)
         ) * ? AS actual_cost
 
