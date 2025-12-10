@@ -1,4 +1,4 @@
-// reused code from:
+//reused and changed code from:
 /*
  * The MIT License
  *
@@ -24,21 +24,23 @@
  */
 
 
-package org.example;
+package org.example.view;
 
-import org.example.controller.Controller;
-import org.example.view.BlockingInterpreter;
-
-public class App {
-    public static void main(String[] args) {
-        try {
-            Controller controller = new Controller();
-            controller.connect();
-            
-            new BlockingInterpreter(controller).handleCmds();
-        } catch (Exception e) {
-            System.out.println("Could not connect to db.");
-            e.printStackTrace();
-        }
-    }
+public enum Command {
+    // task 1
+    CALCULATE_COST,
+    
+    // task 2
+    INCREASE_STUDENTS,
+    
+    // task 3
+    ALLOCATE_TEACHER,
+    DEALLOCATE_TEACHER,
+    
+    // task 4
+    ADD_EXERCISE_ACTIVITY,
+    
+    HELP,
+    QUIT,
+    ILLEGAL_COMMAND
 }

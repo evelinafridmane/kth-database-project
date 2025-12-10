@@ -15,10 +15,19 @@ public class CourseCostDTO {
         this.actualCost = actualCost;
     }
     
-    // Add Getters and a toString() method to print it easily
-    public String toString() {
-        return "Course Code: " + courseCode + "Course Instance: "
-         + instanceId + " | Period: " + studyPeriod + "| Planned: " 
-         + plannedCost + " | Actual: " + actualCost;
+public String getCourseCode() {
+     return courseCode; 
     }
+    public String getInstanceId() { 
+        return instanceId; 
+    }
+    public String getStudyPeriod() {
+         return studyPeriod; 
+        }
+    public double getPlannedCost() {
+         return plannedCost;
+         }
+    public double getActualCost() { 
+        return actualCost;
+     }
 }

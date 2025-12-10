@@ -10,32 +10,31 @@ public class CourseInstanceDAO {
 
     public CourseInstanceDAO(Connection connection) {
         this.connection = connection;
-    } //conctructor
+    } // conctructor
 
-
-    public int getStudentCount(String instanceId) throws SQLException { 
-        String sql = "SELECT num_students FROM course_instance WHERE instance_id = ? FOR UPDATE"; 
-       // lock the row
+    public int getStudentCount(String instanceId) throws SQLException {
+        String sql = "SELECT num_students FROM course_instance WHERE instance_id = ? FOR UPDATE";
+        // lock the row
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
             stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, Integer.parseInt(instanceId));//convert from string to int
-            
-            rs = stmt.executeQuery(); //results
-            
+            stmt.setInt(1, Integer.parseInt(instanceId));// convert from string to int
+
+            rs = stmt.executeQuery(); // results
+
             if (rs.next()) {
-                return rs.getInt(1);//column 1 (which is 'num_students')
+                return rs.getInt(1);// column 1 (which is 'num_students')
             } else {
                 throw new SQLException("Course not found: " + instanceId);
             }
         } finally {
             if (rs != null) {
-                rs.close(); //close result table 
+                rs.close(); // close result table
             }
             if (stmt != null) {
-                stmt.close(); 
+                stmt.close();
             }
         }
     }
@@ -48,7 +47,7 @@ public class CourseInstanceDAO {
             stmt = connection.prepareStatement(sql);
             stmt.setInt(1, newCount);
             stmt.setInt(2, Integer.parseInt(instanceId));
-            
+
             stmt.executeUpdate();
         } finally {
             if (stmt != null) {
