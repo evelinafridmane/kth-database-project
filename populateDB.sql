@@ -161,8 +161,8 @@ INSERT INTO teaching_activity (activity_name, factor) VALUES
 -- New IDs ( 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15)
 TRUNCATE TABLE course_instance RESTART IDENTITY CASCADE;
 INSERT INTO course_instance (num_students, study_period, study_year, course_layout_id) VALUES
-(25, 'P2', 2025, 4),  -- Was 51
-(20, 'P1', 2022, 13), -- Was 62
+(25, 'P2', 2022, 4),  -- Was 51
+(20, 'P2', 2022, 13), -- Was 62
 (40, 'P3', 2023, 14), -- Was 63
 (10, 'P4', 2024, 6),  -- Was 54
 (25, 'P2', 2025, 7),  -- Was 55
