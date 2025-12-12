@@ -10,7 +10,7 @@ public class BusinessLogic {
     // task 3 
     public void validateTeacherLoad(int currentLoad, boolean alreadyInCourse) throws Exception {
         if (!alreadyInCourse) {
-            // The "Business Rule" (Max 4) lives here, not in the Controller
+            // max 4 rule
             if (currentLoad >= 4) {
                 throw new Exception("Teacher limit reached: already has " + currentLoad + " courses.");
             }
