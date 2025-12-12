@@ -2,15 +2,12 @@ package org.example.model;
 
 public class BusinessLogic {
 
-    // Task 2: Pure math.
-    // The Controller gives the number, this Logic gives the answer.
+    // task 2
     public int calculateNewStudentCount(int currentCount) {
         return currentCount + 100;
     }
 
-    // Task 3: Pure Validation.
-    // The Controller provides the 'situation' (load, alreadyInCourse),
-    // The Logic decides if it passes or fails.
+    // task 3 
     public void validateTeacherLoad(int currentLoad, boolean alreadyInCourse) throws Exception {
         if (!alreadyInCourse) {
             // The "Business Rule" (Max 4) lives here, not in the Controller
