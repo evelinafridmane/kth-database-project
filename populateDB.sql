@@ -200,11 +200,32 @@ INSERT INTO planned_activity (planned_nb_hours, instance_id, teaching_activity_i
 -- -------------------------------
 -- EMPLOYEE_ACTIVITY
 -- -------------------------------
-TRUNCATE TABLE employee_activity RESTART IDENTITY CASCADE;
-INSERT INTO employee_activity (employment_id, planned_activity_id) VALUES
-(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10),
-(11, 11), (12, 12), (13, 13), (14, 14), (15, 15), (16, 16), (17, 17), (18, 18), (19, 19), (20, 20);
+-- fix: every single allocated hour is different from the planned hour
+-- to ensure planned Cost != actual Cost for all cases.
 
+TRUNCATE TABLE employee_activity RESTART IDENTITY CASCADE;
+
+INSERT INTO employee_activity (employment_id, planned_activity_id, allocated_hours) VALUES
+(1, 1, 12),   -- Planned: 10
+(2, 2, 15),   -- Planned: 11
+(3, 3, 10),   -- Planned: 12
+(4, 4, 15),   -- Planned: 13
+(5, 5, 12),   -- Planned: 14
+(6, 6, 18),   -- Planned: 15
+(7, 7, 14),   -- Planned: 16
+(8, 8, 20),   -- Planned: 17
+(9, 9, 15),   -- Planned: 18
+(10, 10, 25), -- Planned: 19
+(11, 11, 22), -- Planned: 20
+(12, 12, 25), -- Planned: 21
+(13, 13, 20), -- Planned: 22
+(14, 14, 25), -- Planned: 23
+(15, 15, 30), -- Planned: 24
+(16, 16, 20), -- Planned: 25
+(17, 17, 30), -- Planned: 26
+(18, 18, 25), -- Planned: 27
+(19, 19, 35), -- Planned: 28
+(20, 20, 40); -- Planned: 29
 -- -------------------------------
 -- PERSON_ADDRESS
 -- -------------------------------
