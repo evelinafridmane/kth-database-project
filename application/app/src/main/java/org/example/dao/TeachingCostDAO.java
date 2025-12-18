@@ -26,7 +26,7 @@ public class TeachingCostDAO {
         }
         throw new SQLException("Database empty");
     }
-
+// fixed 
     public CourseCostDTO getTeachingCost(String instanceId, double hourlyRate) throws SQLException {
 
         String sql = """
@@ -35,34 +35,36 @@ public class TeachingCostDAO {
                     ci.instance_id,
                     ci.study_period,
 
-                    -- PLANNED COST (Total Hours from View * Hourly Rate)
-
-                    (SELECT SUM(total_teachers_hours)
-                     FROM v_full_course_workload
-                     WHERE instance_id = ci.instance_id) * ? AS planned_cost,
+                    -- PLANNED COST (fixed)
+                    (
+                    (SELECT COALESCE(SUM(pa.planned_nb_hours * ta.factor), 0)
+                     FROM planned_activity pa
+                     JOIN teaching_activity ta ON pa.teaching_activity_id = ta.teaching_activity_id
+                     WHERE pa.instance_id = ci.instance_id)
+                     +
+                    (2 * cl.hp + 28 + 0.2 * ci.num_students) -- admin formula
+                    +
+                    (32 + 0.725 * ci.num_students)           -- exam formula
+                ) * ? AS planned_cost,
 
                     -- ACTUAL COST
+                --fixed
+                (
+                    (SELECT COALESCE(SUM(ea.allocated_hours * ta.factor), 0) -- using allocated_hours!
+                     FROM employee_activity ea
+                     JOIN planned_activity pa ON ea.planned_activity_id = pa.planned_activity_id
+                     JOIN teaching_activity ta ON pa.teaching_activity_id = ta.teaching_activity_id
+                     WHERE pa.instance_id = ci.instance_id)
+                    +
+                    (2 * cl.hp + 28 + 0.2 * ci.num_students) -- admin 
+                    +
+                    (32 + 0.725 * ci.num_students)           -- exam 
+                ) * ? AS actual_cost
 
-                    (
-                      --  Teacher Hours
-                      SUM(ta.factor * pa.planned_nb_hours)
-                      +
-                      --  Admin Formula
-                      MAX(2 * cl.hp + 28 + 0.2 * ci.num_students)
-                      +
-                      --  Exam Formula
-                      MAX(32 + 0.725 * ci.num_students)
-                    ) * ? AS actual_cost
-
-                FROM course_instance ci
-                JOIN course_layout cl ON ci.course_layout_id = cl.course_layout_id
-                JOIN planned_activity pa ON ci.instance_id = pa.instance_id
-                JOIN teaching_activity ta ON pa.teaching_activity_id = ta.teaching_activity_id
-                JOIN employee_activity ea ON pa.planned_activity_id = ea.planned_activity_id
-
-                WHERE ci.instance_id = ?
-                GROUP BY cl.course_code, ci.instance_id, cl.hp, ci.num_students, ci.study_period
-                """;
+            FROM course_instance ci
+            JOIN course_layout cl ON ci.course_layout_id = cl.course_layout_id
+            WHERE ci.instance_id = ?
+            """;
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             int id = Integer.parseInt(instanceId);
