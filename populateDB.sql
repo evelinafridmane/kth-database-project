@@ -112,13 +112,18 @@ INSERT INTO employee (manager_id, person_id, job_id, department_id) VALUES
 (19, 20, 10, 10); -- Was 30
 
 -- -------------------------------
--- DEPARTMENT (Now safe to insert)
+-- DEPARTMENT 
 -- -------------------------------
-TRUNCATE TABLE department RESTART IDENTITY CASCADE;
-INSERT INTO department (department_name, manager_id) VALUES
-('Computer Science', 1), ('Mathematics', 2), ('Physics', 3), ('Electrical Engineering', 4), ('Mechanical Engineering', 5),
-('Civil Engineering', 6), ('Architecture', 7), ('Chemistry', 8), ('Biotechnology', 9), ('Industrial Management', 10);
-
+UPDATE department SET manager_id = 2 WHERE department_name = 'Computer Science';
+UPDATE department SET manager_id = 2 WHERE department_name = 'Mathematics';
+UPDATE department SET manager_id = 3 WHERE department_name = 'Physics';
+UPDATE department SET manager_id = 4 WHERE department_name = 'Electrical Engineering';
+UPDATE department SET manager_id = 5 WHERE department_name = 'Mechanical Engineering';
+UPDATE department SET manager_id = 6 WHERE department_name = 'Civil Engineering';
+UPDATE department SET manager_id = 7 WHERE department_name = 'Architecture';
+UPDATE department SET manager_id = 8 WHERE department_name = 'Chemistry';
+UPDATE department SET manager_id = 9 WHERE department_name = 'Biotechnology';
+UPDATE department SET manager_id = 10 WHERE department_name = 'Industrial Management';
 -- -------------------------------
 -- SKILL
 -- -------------------------------
@@ -236,4 +241,14 @@ INSERT INTO salary_history (monthly_salary_amount, from_date, to_date, employmen
 ('46000', '2022-01-01', NULL, 18),
 ('54000', '2022-01-01', NULL, 19),
 ('72000', '2022-01-01', NULL, 20); 
+
+
+
+TRUNCATE TABLE university_rules RESTART IDENTITY CASCADE;
+INSERT INTO university_rules (rule_name, rule_value) VALUES ('MAX_TEACHER_COURSES', 4);
+
+
+
+
+
 
