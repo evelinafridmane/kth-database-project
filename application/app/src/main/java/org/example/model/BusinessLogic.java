@@ -7,12 +7,12 @@ public class BusinessLogic {
         return currentCount + 100;
     }
 
-    // task 3 
-    public void validateTeacherLoad(int currentLoad, boolean alreadyInCourse) throws Exception {
+    // task 3
+   public void validateTeacherLoad(int currentLoad, int maxLimit, boolean alreadyInCourse) throws Exception {
         if (!alreadyInCourse) {
-            // max 4 rule
-            if (currentLoad >= 4) {
-                throw new Exception("Teacher limit reached: already has " + currentLoad + " courses.");
+            // now i compare against the variable maxLimit, not the 4
+            if (currentLoad >= maxLimit) {
+                throw new Exception("Teacher limit reached: already has " + currentLoad + " courses. (Max allowed: " + maxLimit + ")");
             }
         }
     }
