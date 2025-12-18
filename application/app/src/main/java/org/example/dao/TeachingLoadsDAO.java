@@ -11,7 +11,19 @@ public class TeachingLoadsDAO {
     public TeachingLoadsDAO(Connection connection) {
         this.connection = connection;
     }
-
+// fixed getting hardcoded max 4 rule from the database
+public int getMaxCourseLimit() throws SQLException {
+    String sql = "SELECT rule_value FROM university_rules WHERE rule_name = 'MAX_TEACHER_COURSES'";
+    
+    try (PreparedStatement stmt = connection.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        
+        if (rs.next()) {
+            return rs.getInt("rule_value");
+        }
+        return 4; 
+    }
+}
     // task 3
     // ID for a specific activity
     public Integer getPlannedActivityId(String instanceId, String activityName) throws SQLException {
@@ -53,7 +65,19 @@ public class TeachingLoadsDAO {
         }
         return null;
     }
-
+// get hours
+    public int getPlannedHours(int plannedActivityId) throws SQLException {
+    String sql = "SELECT planned_nb_hours FROM planned_activity WHERE planned_activity_id = ?";
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setInt(1, plannedActivityId);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("planned_nb_hours");
+            }
+        }
+    }
+    return 0; 
+}
     // counts the courses for teacher
     public int countActiveCoursesForTeacher(String teacherId, String period, String year) throws SQLException {
         String sql = """
@@ -114,12 +138,13 @@ public class TeachingLoadsDAO {
         }
     }
 
-    public void allocateActivity(String teacherId, int plannedActivityId) throws SQLException {
-        String sql = "INSERT INTO employee_activity (employment_id, planned_activity_id) VALUES (?, ?)";
+    public void allocateActivity(String teacherId, int plannedActivityId, int allocatedHours) throws SQLException {
+        String sql = "INSERT INTO employee_activity (employment_id, planned_activity_id, allocated_hours) VALUES (?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, Integer.parseInt(teacherId));
             stmt.setInt(2, plannedActivityId);
+            stmt.setInt(3, allocatedHours); // fixed
             stmt.executeUpdate();
         }
     }
