@@ -123,6 +123,7 @@ CREATE TABLE employee_activity (
 	employment_id INT NOT NULL,
 	planned_activity_id INT NOT NULL,
 	PRIMARY KEY(employment_id, planned_activity_id),
+	allocated_hours INT,
 	FOREIGN KEY (employment_id) REFERENCES employee(employment_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 	--FOREIGN KEY (planned_activity_id) REFERENCES planned_activity(planned_activity_id) ON DELETE RESTRICT ON UPDATE RESTRICT
 );
